@@ -97,9 +97,11 @@ orc_check_riscv_elf_aux_info (void)
   unsigned long hwcap2 = 0;
 #endif
 
-  elf_aux_info(AT_HWCAP, &hwcap, sizeof(hwcap));
+  if (elf_aux_info(AT_HWCAP, &hwcap, sizeof(hwcap)) != 0)
+    hwcap = 0;
 #ifdef HWCAP2_ISA_ZVBB
-  elf_aux_info(AT_HWCAP2, &hwcap2, sizeof(hwcap2));
+  if (elf_aux_info(AT_HWCAP2, &hwcap2, sizeof(hwcap2)) != 0)
+    hwcap2 = 0;
 #endif
 
   if (hwcap & HWCAP_ISA_C)

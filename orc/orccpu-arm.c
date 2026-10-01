@@ -81,7 +81,8 @@ orc_check_neon_elf_aux_info (void)
   unsigned long flags = 0;
   unsigned long auxv = 0;
 
-  elf_aux_info(AT_HWCAP, &auxv, sizeof(auxv));
+  if (elf_aux_info(AT_HWCAP, &auxv, sizeof(auxv)) != 0)
+    auxv = 0;
 
 #ifdef __arm__
   if (auxv & HWCAP_NEON)
