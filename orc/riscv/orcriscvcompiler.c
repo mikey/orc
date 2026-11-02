@@ -157,8 +157,14 @@ orc_riscv_compiler_compute_vtype (OrcCompiler *c, OrcRiscvSEW element_width,
 
   vtype.vsew = element_width;
   vtype.vlmul = (c->loop_shift + insn_shift + vtype.vsew - 3) & 0x7;
-  vtype.vma = TRUE;
-  vtype.vta = TRUE;
+  /* Undisturbed tail and mask policy: the compare rules and
+   * orc_riscv_insn_emit_flush_subnormals () use masked instructions as
+   * merges, and the accumulators are reduced over VLMAX after a last
+   * strip with vl < VLMAX, so inactive and tail elements must keep their
+   * value. Agnostic policy lets the hardware write all 1s to them
+   * (RVV 1.0, section 3.4.3). */
+  vtype.vma = FALSE;
+  vtype.vta = FALSE;
 
   return vtype;
 }
